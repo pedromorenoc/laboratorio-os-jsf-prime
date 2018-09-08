@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head> 
+<body> 
+<h:form id="formulario">
+<script type="text/javascript">
+function limpiarForm()
+{                        document.getElementById("formulario").reset();
+}
+</script>
+    
+ 
+    
+ <p:panel id="basicpanel" header="Registrar Personas"
+footer="member details" style="margin-bottom:20px">
+		<p:messages id="msgs"/>
+		
+				<h:panelGrid columns="3" cellpadding="10">
+				<p:outputLabel for="idNombreMember" value="Nombre"></p:outputLabel>
+				<p:inputText 
+				id="idNombreMember" 
+				requiredMessage="Nombre Obligatorio"
+				required="true" 
+				value="#{registroPrimeController.newMember.name}">
+				</p:inputText>	
+				<p:message for="idNombreMember"></p:message>
+				</h:panelGrid>
+				
+				
+				<h:panelGrid columns="3" cellpadding="10">
+				<p:outputLabel for="idApellidoMember" value="Apellido"></p:outputLabel>
+				<p:inputText id="idApellidoMember" requiredMessage="Apellido Obligatorio"
+				required="true" value="#{registroPrimeController.newMember.apellido}"></p:inputText>		
+				<p:message for="idApellidoMember"></p:message>
+				</h:panelGrid>
+				
+				<h:panelGrid columns="3" cellpadding="10">
+				<p:outputLabel for="idEmailMember" value="Email"></p:outputLabel>
+				<p:inputText id="idEmailMember" requiredMessage="Email Obligatorio"
+				required="true" value="#{registroPrimeController.newMember.email}"></p:inputText>		
+				<p:message for="idEmailMember"></p:message>
+				</h:panelGrid>
+				
+				<h:panelGrid columns="3" cellpadding="10">
+				<p:outputLabel for="idPhoneMember" value="Phone #"></p:outputLabel>
+				<p:inputText id="idPhoneMember" requiredMessage="Phone Obligatorio"
+				required="true" value="#{registroPrimeController.newMember.phoneNumber}"></p:inputText>		
+				<p:message for="idPhoneMember"></p:message>
+				</h:panelGrid>
+				
+				
+			  <p:commandButton value="Guardar"
+				action="#{registroPrimeController.register()}"
+				id="iconOnly" icon="ui-icon-disk" title="Guardar" update="basicpanel msgs idTablaMember" 
+				onclick="limpiarform()" process="@form" />  
+				
+    
+  <p:dialog header="Modal Dialog" widgetVar="dlgDatosMember" modal="true" height="100">
+   
+    
+        <p:outputPanel id="memberDetail" style="text-align:center;">
+            <p:panelGrid  columns="2" columnClasses="label,value">
+                <f:facet name="header">
+                    <p:outputLabel value="Detalles">  </p:outputLabel>
+                </f:facet>
+ 
+                <h:outputText value="Nombre:" />
+                <h:outputText value="#{registroPrimeController.newMember.name}" />
+                
+                <h:outputText value="Apellido:" />
+                <h:outputText value="#{registroPrimeController.newMember.apellido}" />
+                
+                <h:outputText value="Email:" />
+                <h:outputText value="#{registroPrimeController.newMember.email}" />
+                
+                 <h:outputText value="Phone:" />
+                <h:outputText value="#{registroPrimeController.newMember.phoneNumber}" />
+              
+            </p:panelGrid>
+        </p:outputPanel>
+    
+</p:dialog>              
+                                               
+</p:panel>
+
+</h:form>
+
+
+
+	<p:dataTable id="idTablaMember" var="member" value="#{registroPrimeController.memberLista}" 
+	rows="3" paginator="true"
+    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+    {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+    rowsPerPageTemplate="3,6,9">
+    
+				    <p:column headerText="Id">
+				        <h:outputText value="#{member.id}" />
+				    </p:column>
+				 
+				    <p:column headerText="Nombre">
+				        <h:outputText value="#{member.name}" />
+				    </p:column>
+				 
+				    <p:column headerText="Apellido">
+				        <h:outputText value="#{member.apellido}" />
+				    </p:column>
+				 
+				    <p:column headerText="Email">
+				        <h:outputText value="#{member.email}" />
+				    </p:column>
+			
+			 	   <p:column headerText="Phone #">
+				        <h:outputText value="#{member.phoneNumber}" />
+				    </p:column>
+				    
+				   <p:column headerText="Opciones">
+				   <h:form id="eliminar">
+            		<p:commandButton action=
+           		 	"#{registroPrimeController.remover(member.id)}"
+            		value="Borrar" icon="fa fa-fw fa-scissors" onclick="limpiarform()">
+            		</p:commandButton>
+            		
+            		<p:commandButton update=":formulario:basicpanel" immediate="true" 
+            		value="Editar" process="@this"
+            		icon="fa fa-fw fa-edit"
+            		actionListener="#{registroPrimeController.setNewMember(member)}">
+            		</p:commandButton>
+            		
+            		<p:commandButton 
+            		process="@this"
+            		actionListener="#{registroPrimeController.setNewMember(member)}"
+            		update=":formulario:memberDetail"
+            		oncomplete="PF('dlgDatosMember').show();"
+            		icon="ui-icon-search"/>
+            		
+            		</h:form>
+            	  </p:column>
+				    <f:facet name="paginatorTopLeft">
+           
+        </f:facet>
+ 
+        <f:facet name="paginatorBottomRight">
+            
+        </f:facet>
+				</p:dataTable>
+                
+
+</body> 
+</h:head>
+</html>
